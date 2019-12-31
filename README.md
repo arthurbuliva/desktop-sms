@@ -1,3 +1,5 @@
-# desktop-sms
-# desktop-sms
-# desktop-sms
+# Desktop SMS
+
+Application to manage SMS messages on a desktop
+
+Learnings: Encryption using Java
