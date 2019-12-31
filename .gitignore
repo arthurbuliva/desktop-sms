@@ -1,2 +1,2 @@
 /src/main/resources/config/
-target/*
+target/*.DS_Store
