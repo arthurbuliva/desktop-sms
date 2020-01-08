@@ -2,6 +2,8 @@ package com.kentext.common;
 
 import java.awt.Color;
 import java.io.FileInputStream;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -31,6 +33,8 @@ public interface Common
             "jdbc:sqlite:%s",
             DATA_FILE
     );
+    
+    public final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH);
     
     public final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
