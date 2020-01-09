@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public interface Common
 {
@@ -34,9 +36,13 @@ public interface Common
             DATA_FILE
     );
     
-    public final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+    public final DateTimeFormatter DATE_FORMATTER
+            = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ENGLISH);
     
     public final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    
+    public final EntityManagerFactory ENTITY_MANAGER_FACTORY
+            = Persistence.createEntityManagerFactory("KentextDb");
 
     public final int ERROR = -1;
     public final int DRAFT = 0;

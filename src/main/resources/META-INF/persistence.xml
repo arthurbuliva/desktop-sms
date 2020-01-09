@@ -5,8 +5,9 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <!-- Entity classes -->
     <class>kentext.test.Outbox</class>
+    <class>kentext.test.Workshop</class>
     <properties>
-      <property name="dialect" value="org.hibernate.dialect.SQLiteDialect"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.SQLiteDialect"/>
       <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:/Users/arthur/Desktop/kentext.db"/>
       <property name="javax.persistence.jdbc.user" value=""/>
@@ -14,7 +15,7 @@
       <property name="hibernate.show_sql" value="true"/>
       <property name="format_sql" value="true"/>
       <property name="hibernate.connection.charSet" value="UTF-8"/>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="javax.persistence.schema-generation.database.action" value="none"/>
     </properties>
   </persistence-unit>
 </persistence>

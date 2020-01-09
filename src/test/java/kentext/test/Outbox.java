@@ -16,8 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Id;
-import javax.persistence.Persistence;
 import javax.persistence.PrePersist;
+import javax.persistence.Query;
 import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -25,10 +25,6 @@ import org.hibernate.annotations.ColumnDefault;
 @Table(name = "outbox")
 public class Outbox implements Serializable, Common
 {
-
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("KentextDb");
-
     @Id
     @Column(name = "id", nullable = false, unique = true)
     private int id;
@@ -160,6 +156,7 @@ public class Outbox implements Serializable, Common
     public void create(int id)
     {
         // Create an EntityManager
+        
         EntityManager manager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
 
@@ -173,9 +170,9 @@ public class Outbox implements Serializable, Common
             // Create a new Student object
             Outbox outbox = new Outbox();
             outbox.setId(id);
-            outbox.setOrigin("254721212604");
-            outbox.setDestination("254722407717");
-            outbox.setMessage("This is my message");
+            outbox.setOrigin("254720000000");
+            outbox.setDestination("25472213456");
+            outbox.setMessage("Hello world");
 
             // Save the student object
             manager.persist(outbox);
@@ -208,7 +205,7 @@ public class Outbox implements Serializable, Common
     public List readAll()
     {
 
-        List students = null;
+        List<Outbox> students = null;
 
         // Create an EntityManager
         EntityManager manager = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -220,12 +217,13 @@ public class Outbox implements Serializable, Common
             transaction = manager.getTransaction();
             // Begin the transaction
             transaction.begin();
-
+                       
             // Get a List of Students
-            students = manager.createQuery("SELECT * FROM outbox",
-                    Outbox.class
+            students = manager.createQuery(
+                "SELECT o FROM Outbox o",
+                kentext.test.Outbox.class
             ).getResultList();
-
+            
             // Commit the transaction
             transaction.commit();
         }
@@ -358,18 +356,4 @@ public class Outbox implements Serializable, Common
             throw new java.security.GeneralSecurityException();
         }
     }
-
-    public static void main(String[] args)
-    {
-//        SpringApplication.run(DemoApplication.class, args);
-        Outbox outbox = new Outbox();
-
-        for (int i = 10; i < 12; i++)
-        {
-            outbox.create(i);
-        }
-
-//        System.out.println(outbox.readAll());
-    }
-
 }
