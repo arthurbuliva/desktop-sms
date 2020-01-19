@@ -1,12 +1,11 @@
-package kentext.test;
+package com.kentext.ui;
 
 import com.kentext.common.Common;
 import java.sql.SQLException;
 import org.h2.tools.Console;
 
-public class Workshop implements Common
+public class H2DBViewer implements Common
 {
-
     public static void main(String[] args) throws SQLException, ClassNotFoundException
     {
         String[] options = 

@@ -143,8 +143,9 @@ public class LoginPanel extends JPanel implements Common
                 KentextService kentextService = new KentextService();
 
                 JsonArray senderIds = (JsonArray) (kentextService.getAvailableCreditsFromKentext()).get("sender_ids");
-
+                
                 Vector availableSenderIds = new Vector();
+                
                 availableSenderIds.add(loadConfigurationFile().getProperty("DEFAULT_KENTEXT_NUMBER"));
 
                 Gson gson = new Gson();

@@ -1,7 +1,7 @@
 package com.kentext.service;
 
 import com.kentext.common.Common;
-import com.kentext.db.Store;
+import com.kentext.db.Users;
 import com.kentext.security.Enigma;
 
 import javax.swing.*;
@@ -10,19 +10,17 @@ import java.awt.event.KeyEvent;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Random;
 import javax.crypto.NoSuchPaddingException;
 
 public class Authenticate implements Common
 {
-    private Store store;
+    private Users users;
     private SMS sms;
 
     public Authenticate()
     {
-        store = new Store();
+        users = new Users();
 
         try
         {
@@ -36,11 +34,11 @@ public class Authenticate implements Common
 
     public boolean authenticateUser(String username, char[] password)
     {
-        HashMap<String, String> userData = store.retrieveUser(username);
+        Users userData = users.retrieveUser(username);
 
         try (Enigma enigma = new Enigma())
         {
-            char[] storedPassword = userData.get("password").toCharArray();
+            char[] storedPassword = userData.getPassword().toCharArray();
             char[] userPassword = (enigma.encryptText(String.valueOf(password))).toCharArray();
 
             if (Arrays.equals(storedPassword, userPassword))
@@ -99,11 +97,11 @@ public class Authenticate implements Common
         {
 
             //Step 2: Insert this user as new in the database with active flag 0
-            store.addUser(
+            users.createNewUser(
                     username,
                     password,
                     enigma.encryptText(unencryptedToken),
-                    (new Date()).toString(),
+                    null,
                     0
             );
 
@@ -204,7 +202,7 @@ public class Authenticate implements Common
 
             //Step 5:: If all valid, delete the token and update user as active
 
-            return store.activateUser(username);
+            return users.activateUser(username);
         }
         catch (Exception ex)
         {

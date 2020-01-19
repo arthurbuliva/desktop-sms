@@ -113,6 +113,7 @@ public class NewUserPanel extends JPanel implements Common
                         System.setProperty("com.kentext.desktop.mynumber", enigma.encryptText(
                             loadConfigurationFile().getProperty("DEFAULT_KENTEXT_NUMBER")
                         ));
+                        
                         System.setProperty("com.kentext.desktop.authkey", enigma.encryptText(String.valueOf(confirmPasswordField.getPassword())));
 
                         boolean processed = authenticate.processNewUser(usernameField.getText(),

@@ -44,25 +44,7 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.28.0</version>
         </dependency>
-        
-        <dependency>
-            <groupId>jgoodies</groupId>
-            <artifactId>looks</artifactId>
-            <version>1.2.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>jgoodies</groupId>
-            <artifactId>plastic</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>jgoodies-common</artifactId>
-            <version>1.8.0</version>
-        </dependency>
-        
+               
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -87,6 +69,12 @@
             <version>1.0</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+        </dependency>
+        
     </dependencies>
     <build>
         <plugins>
@@ -97,7 +85,7 @@
                     <source>11</source>
                     <target>11</target>
                 </configuration>
-                <version>2.4.1</version>
+                <version>3.8.1</version>
             </plugin>
 
             <plugin>
@@ -133,7 +121,7 @@
                         </manifest>
                     </archive>
                 </configuration>
-                <version>2.4.1</version>
+                <version>3.2.0</version>
             </plugin>
 
             <plugin>

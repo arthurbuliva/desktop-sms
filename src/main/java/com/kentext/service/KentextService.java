@@ -113,27 +113,27 @@ public class KentextService implements Common
         }
     }
 
-//    private static String getAvailableSMSCredits(HttpPost userLoginPost, CloseableHttpClient httpclient) throws Exception
-//    {
-//        HttpResponse userLoginPostResponse = httpclient.execute(userLoginPost);
-//
-//        if(userLoginPostResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
-//        {
-//            JsonElement userLoginPostResponseJSON = new JsonParser().parse(
-//                    EntityUtils.toString(userLoginPostResponse.getEntity())
-//            );
-//
-//            return userLoginPostResponseJSON
-//                    .getAsJsonObject().get("user")
-//                    .getAsJsonObject().get("field_sms_credits")
-//                    .getAsJsonObject().get("und")
-//                    .getAsJsonArray().get(0)
-//                    .getAsJsonObject().get("value")
-//                    .getAsString();
-//        }
-//        else
-//        {
-//            return (userLoginPostResponse.getStatusLine().getReasonPhrase());
-//        }
-//    }
+    private static String getAvailableSMSCredits(HttpPost userLoginPost, CloseableHttpClient httpclient) throws Exception
+    {
+        HttpResponse userLoginPostResponse = httpclient.execute(userLoginPost);
+
+        if(userLoginPostResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
+        {
+            JsonElement userLoginPostResponseJSON = new JsonParser().parse(
+                    EntityUtils.toString(userLoginPostResponse.getEntity())
+            );
+
+            return userLoginPostResponseJSON
+                    .getAsJsonObject().get("user")
+                    .getAsJsonObject().get("field_sms_credits")
+                    .getAsJsonObject().get("und")
+                    .getAsJsonArray().get(0)
+                    .getAsJsonObject().get("value")
+                    .getAsString();
+        }
+        else
+        {
+            return (userLoginPostResponse.getStatusLine().getReasonPhrase());
+        }
+    }
 }

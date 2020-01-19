@@ -1,7 +1,7 @@
 package com.kentext.ui;
 
 import com.kentext.common.Common;
-import com.kentext.db.Store;
+import com.kentext.db.Outbox;
 import com.kentext.security.Enigma;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ import javax.crypto.NoSuchPaddingException;
 
 class SentMessagesInternalFrame extends JInternalFrame implements Common
 {
-    private Store store;
+    private Outbox outbox;
     private Enigma enigma;
     private JTable sentMessageTable;
 
@@ -51,7 +51,7 @@ class SentMessagesInternalFrame extends JInternalFrame implements Common
 
         try
         {
-            store = new Store();
+            outbox = new Outbox();
             enigma = new Enigma();
         }
         catch (NoSuchAlgorithmException | NoSuchPaddingException ex)
@@ -84,8 +84,7 @@ class SentMessagesInternalFrame extends JInternalFrame implements Common
             {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 c.setBackground(
-                        sentMessageTable.getModel().getValueAt(row, 5)
-                        == null ? OK_COLOR : ERROR_COLOR
+                        sentMessageTable.getModel().getValueAt(row, 5).equals("") ? OK_COLOR : ERROR_COLOR
                 );
 
                 return c;
@@ -126,19 +125,29 @@ class SentMessagesInternalFrame extends JInternalFrame implements Common
                 {
                     Object errorMessage = sentMessageTable.getModel().getValueAt(sentMessageTable.getSelectedRow(), 5);
 
-                    if(errorMessage != null)
+                    if(errorMessage.equals(""))
                     {
                         JOptionPane.showMessageDialog(null,
-                                String.format("Message not sent: %s", errorMessage),
-                                "Kentext SMS Manager",
-                                JOptionPane.ERROR_MESSAGE);
+                            String.format("Message was sent successfully"),
+                            "Kentext SMS Manager",
+                            JOptionPane.INFORMATION_MESSAGE);
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null,
-                                String.format("Message was sent successfully"),
+                        if(errorMessage.equals(String.valueOf(SCHEDULED)))
+                        {
+                            JOptionPane.showMessageDialog(null,
+                                String.format("Message scheduled to be sent at a future date or time"),
                                 "Kentext SMS Manager",
                                 JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null,
+                                String.format("Message not sent: %s", errorMessage),
+                                "Kentext SMS Manager",
+                                JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
                 else
@@ -153,7 +162,8 @@ class SentMessagesInternalFrame extends JInternalFrame implements Common
             for(int selected : sentMessageTable.getSelectedRows())
             {
                 String value = sentMessageTable.getModel().getValueAt(selected, 0).toString();
-                store.deleteMessage(value);
+                
+                outbox.deleteMessage(value);
 
                 TableModel newModel = new DefaultTableModel(getSentMessagesData(), getTableHeaders()){
                     @Override
@@ -173,19 +183,19 @@ class SentMessagesInternalFrame extends JInternalFrame implements Common
     {
         try
         {
-            HashMap<Integer, HashMap<String, String>> sentMessages = store.retrieveSentMessages(
+            HashMap<String, HashMap<String, String>> sentMessages = outbox.getMessagesSentBy(
                     enigma.decryptText(System.getProperty("com.kentext.desktop.mynumber"))
             );
 
             assert sentMessages != null;
 
-            List<Integer> sortedKeys = new ArrayList<>(sentMessages.keySet());
+            List<String> sortedKeys = new ArrayList<>(sentMessages.keySet());
 
             sortedKeys.sort(Collections.reverseOrder());
 
             Vector<Vector<String>> tableData = new Vector<>();
 
-            for (Integer index : sortedKeys)
+            for (String index : sortedKeys)
             {
                 HashMap<String, String> messageMap = sentMessages.get(index);
 

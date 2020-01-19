@@ -1,7 +1,7 @@
 package com.kentext.service;
 
 import com.kentext.common.Common;
-import com.kentext.db.Store;
+import com.kentext.db.Outbox;
 import com.kentext.security.Enigma;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,14 +21,14 @@ import javax.crypto.NoSuchPaddingException;
 
 public class SMS implements Common
 {
-    private final Store store;
+    private final Outbox outbox;
     private final Enigma enigma;
-    private final KentextService kentextService;
+    KentextService kentextService;
 
     public SMS() throws NoSuchPaddingException, NoSuchAlgorithmException
     {
         enigma = new Enigma();
-        store = new Store();
+        outbox = new Outbox();
         kentextService = new KentextService();
     }
 
@@ -36,11 +36,11 @@ public class SMS implements Common
     {
         Vector data = new Vector();
 
-        HashMap<Integer, HashMap<String, String>> sentMessages = store.retrieveSentMessages(origin);
+        HashMap<String, HashMap<String, String>> sentMessages = outbox.getMessagesSentBy(origin);
 
-        for (Map.Entry<Integer, HashMap<String, String>> entry : sentMessages.entrySet())
+        for (Map.Entry<String, HashMap<String, String>> entry : sentMessages.entrySet())
         {
-            Integer index = entry.getKey();
+            String index = entry.getKey();
 
             HashMap<String, String> messageMap = entry.getValue();
 
@@ -63,8 +63,6 @@ public class SMS implements Common
                 LOGGER.severe(ex.getMessage());
                 
             }
-                int reviewLength = 20;
-
                 StringBuilder smsStringBuilder = new StringBuilder();
                 
                 smsStringBuilder.append(
@@ -97,13 +95,14 @@ public class SMS implements Common
     {
         // Queue message for sending.
         // Daemon.java will pick it up
-        return store.saveMessage(
+        
+        return outbox.saveMessage(
                 isToken == 1 ? enigma.decryptText(System.getProperty("com.kentext.desktop.mynumber")) : origin,
                 destination,
                 enigma.encryptText(message),
-                SCHEDULED,
-                null,
-                whenToSend,
+                String.valueOf(SCHEDULED),
+                String.valueOf(SCHEDULED),
+                whenToSend.toString(),
                 isToken,
                 isToken == 1 ?
                         loadConfigurationFile().getProperty("DEFAULT_KENTEXT_NUMBER")
